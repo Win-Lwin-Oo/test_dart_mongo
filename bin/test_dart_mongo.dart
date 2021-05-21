@@ -1,13 +1,25 @@
 // import 'package:test_dart_mongo/test_dart_mongo.dart' as test_dart_mongo;
+import 'dart:io';
+
 import 'package:mongo_dart/mongo_dart.dart';
 
 void main(List<String> arguments) async {
+  // initialize server
+  var port = 5000;
+  var address = 'localhost';
+  var server = await HttpServer.bind(address, port);
+
+  // initialize db
   var db = Db('mongodb://127.0.0.1:27017/test');
   await db.open();
-
   print('Connected to database');
 
-  var collection = db.collection('people');
+  server.listen((HttpRequest request) {
+    request.response.write('Hello world!');
+    request.response.close();
+  });
+
+  //var collection = db.collection('people');
 
   // Read Data
   //var people = await collection.find().toList();
@@ -39,8 +51,8 @@ void main(List<String> arguments) async {
   // print('Update data');
 
   // Delete Data
-  await collection.remove(where.eq('id', 101));
-  print('Delete data');
+  // await collection.remove(where.eq('id', 101));
+  // print('Delete data');
 
   await db.close();
 }
