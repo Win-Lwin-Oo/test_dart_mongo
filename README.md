@@ -12,3 +12,6 @@ mongoimport --jsonArray -d <yourDatabaseName> -c <yourCollectionName> --file <pa
 ```
 
 > [Mongo shell quick reference](https://docs.mongodb.com/manual/reference/mongo-shell/) for Shell Command
+
+### Generate JSON Data
+- [mockaroo](https://mockaroo.com/)
