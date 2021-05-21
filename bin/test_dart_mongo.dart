@@ -14,15 +14,24 @@ void main(List<String> arguments) async {
   //var people = await collection.find(where.eq('first_name', 'Oren')).toList();
   //var people = await collection.find(where.limit(5)).toList();
   //var people = await collection.findOne(where.match('first_name', 'B'));
-  var people = await collection
-      //.findOne(where.match('first_name', 'B').and(where.gt('id', 40)));
-      //.findOne(where.match('first_name', 'B').gt('id', 40));
-      .findOne(where.jsQuery('''
-      return this.first_name.startsWith('B') && this.id > 40;
-      '''));
-  print('People list: \n $people');
+  // var people = await collection
+  //     //.findOne(where.match('first_name', 'B').and(where.gt('id', 40)));
+  //     //.findOne(where.match('first_name', 'B').gt('id', 40));
+  //     .findOne(where.jsQuery('''
+  //     return this.first_name.startsWith('B') && this.id > 40;
+  //     '''));
+  //print('People list: \n $people');
 
   // Create Data
+  await collection.insert({
+    'id': 101,
+    'first_name': 'Win',
+    'last_name': 'Win',
+    'email': 'winwin@xinhuanet.com',
+    'gender': 'Male',
+    'ip_address': '99.252.84.122'
+  });
+  print('Insert data');
 
   // Update Data
 

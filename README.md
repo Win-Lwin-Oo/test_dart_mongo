@@ -6,7 +6,7 @@
 ### Dependencies
 - [momgo_dart](https://pub.dev/packages/mongo_dart/install)
 
-### Impoer json data to mongodb
+### Import json data to mongodb
 ```
 mongoimport --jsonArray -d <yourDatabaseName> -c <yourCollectionName> --file <path/To/File.json>
 ```
