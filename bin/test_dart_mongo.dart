@@ -23,19 +23,24 @@ void main(List<String> arguments) async {
   //print('People list: \n $people');
 
   // Create Data
-  await collection.insert({
-    'id': 101,
-    'first_name': 'Win',
-    'last_name': 'Win',
-    'email': 'winwin@xinhuanet.com',
-    'gender': 'Male',
-    'ip_address': '99.252.84.122'
-  });
-  print('Insert data');
+  // await collection.insert({
+  //   'id': 101,
+  //   'first_name': 'Win',
+  //   'last_name': 'Win',
+  //   'email': 'winwin@xinhuanet.com',
+  //   'gender': 'Male',
+  //   'ip_address': '99.252.84.122'
+  // });
+  // print('Insert data');
 
   // Update Data
+  // await collection.update(
+  //     where.eq('id', 101), modify.set('ip_address', '192.168.10.100'));
+  // print('Update data');
 
   // Delete Data
+  await collection.remove(where.eq('id', 101));
+  print('Delete data');
 
   await db.close();
 }
