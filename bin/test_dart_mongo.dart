@@ -14,12 +14,26 @@ void main(List<String> arguments) async {
   await db.open();
   print('Connected to database');
 
-  server.listen((HttpRequest request) {
-    request.response.write('Hello world!');
-    request.response.close();
+  var collection = db.collection('people');
+
+  server.listen((HttpRequest request) async {
+    switch (request.uri.path) {
+      case '/':
+        request.response.write('Hello world!');
+        await request.response.close();
+        break;
+      case '/people':
+        request.response.write(await collection.find().toList());
+        await request.response.close();
+        break;
+      default:
+        request.response.statusCode = HttpStatus.notFound;
+        request.response.write('Not Found');
+        await request.response.close();
+    }
   });
 
-  //var collection = db.collection('people');
+  print('Server is listening at http://$address:$port');
 
   // Read Data
   //var people = await collection.find().toList();
@@ -54,5 +68,5 @@ void main(List<String> arguments) async {
   // await collection.remove(where.eq('id', 101));
   // print('Delete data');
 
-  await db.close();
+  // await db.close();
 }
