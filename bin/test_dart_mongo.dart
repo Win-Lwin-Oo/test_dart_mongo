@@ -1,5 +1,6 @@
 // import 'package:test_dart_mongo/test_dart_mongo.dart' as test_dart_mongo;
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -23,7 +24,50 @@ void main(List<String> arguments) async {
         await request.response.close();
         break;
       case '/people':
-        request.response.write(await collection.find().toList());
+        if (request.method == 'GET') {
+          request.response.write(await collection.find().toList());
+        } else if (request.method == 'POST') {
+          // IMPORTANT: to cast<List<int>> in request transform
+          // BECAUSE: change SDK https://github.com/aloisdeniel/flutter_geocoder/pull/22
+          var content =
+              await request.cast<List<int>>().transform(Utf8Decoder()).join();
+          var document = json.decode(content);
+          await collection.insert(document);
+          request.response.write('Insert Success');
+        } else if (request.method == 'PUT') {
+          var param = request.uri.queryParameters['id'];
+          var id = int.parse(param!);
+          //print(id.runtimeType);
+          var content =
+              await request.cast<List<int>>().transform(Utf8Decoder()).join();
+          var document = json.decode(content);
+          var itemToReplace = await collection.findOne(where.eq('id', id));
+          //print(itemToReplace);
+          if (itemToReplace == null) {
+            await collection.insert(document);
+            request.response.write('Insert Success');
+          } else {
+            await collection.update(itemToReplace, document);
+            request.response.write('Update Success');
+          }
+        } else if (request.method == 'DELETE') {
+          var param = request.uri.queryParameters['id'];
+          var id = int.parse(param!);
+          var itemToDelete = await collection.findOne(where.eq('id', id));
+          print(itemToDelete);
+          //await collection.remove(where.eq('id', id)); OR
+          await collection.remove(itemToDelete);
+          request.response.write('Delete Success');
+        } else if (request.method == 'PATCH') {
+          var param = request.uri.queryParameters['id'];
+          var id = int.parse(param!);
+          var itemToPatch = await collection.findOne(where.eq('id', id));
+          var content =
+              await request.cast<List<int>>().transform(Utf8Decoder()).join();
+          var document = json.decode(content);
+          await collection.update(itemToPatch, {r'$set': document});
+          request.response.write('Patch Success');
+        }
         await request.response.close();
         break;
       default:
